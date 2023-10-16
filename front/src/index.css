@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #131538;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -14,59 +14,13 @@
   -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 
 .comment-form{
     padding: 20px;
@@ -77,6 +31,7 @@ button:focus-visible {
     background-color: #3f3e3e;
     border-radius: 10px;
     border: white solid 1px;
+    text-align: center;
 }
 .comment-form .reply{
     justify-items: center;
@@ -84,6 +39,7 @@ button:focus-visible {
 .comment-form .reply svg{
     fill: white;
     stroke: white;
+    cursor: pointer;
 }
 
 .form-block{
@@ -96,4 +52,106 @@ button:focus-visible {
     display: block;
     margin-top: 5px;
     width: 100%;
+}
+
+.comments-container{
+    max-width: 700px;
+    margin: auto;
+
+}
+
+.comments-container ul{
+    list-style-type: none;
+}
+.message-header{
+    background-color: #213547;
+    display: flex;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+}
+.message-header div{
+    margin-right: 10px;
+}
+.message-text{
+    text-align: left;
+    background-color: #2a445b;
+    padding: 10px;
+    border-radius:0 0 10px 10px ;
+}
+
+.reply-btn{
+    margin-left: auto;
+    cursor: pointer;
+}
+.message-show-reply{
+    cursor: pointer;
+    min-height: 20px;
+}
+
+.message-date{
+    font-size: 10px;
+}
+
+
+.message-text code{
+    background-color: #131538;
+    padding: 5px;
+    border-radius: 5px;
+
+}
+
+.message-text a{
+
+}
+.message-text i{
+
+}
+.message-text strong{
+
+}
+
+.search-bar{
+    margin: auto;
+    max-width: 700px;
+    width: 100%;
+    display: flex;
+}
+.search-bar button{
+    font-size: 16px;
+    border-radius: 0 5px 5px 0;
+    box-shadow: none;
+    border: 0;
+}
+.search-bar button:active {
+    /* Скасовуємо ефект нажаття */
+    background-color: #405972; /* Можна встановити кольори, які вам потрібні */
+    text-decoration: none;
+    /* Інші стилі, які вам потрібні */
+}
+.search-bar input{
+    width: 100%;
+    min-height: 30px;
+    font-size: 16px;
+}
+
+.search-nav{
+    margin: auto;
+    max-width: 700px;
+    width: 100%;
+}
+.search-select{
+    border-radius: 5px;
+    min-height: 40px;
+    font-size: 16px;
+    font-weight: 600;
+}
+.search-select:hover{
+    background-color: #2a445b;
+}
+.search-select:focus{
+
+    border-radius: 5px 5px 0 0;
+}
+.search-select option{
+    border:0;
 }

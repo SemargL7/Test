@@ -29,7 +29,7 @@ Route::get('/comments', [CommentController::class, 'index']);
 Route::get('/comments/main', [CommentController::class,'showMainComment']);
 
 //Отримання основні коментарів
-Route::get('/comments/parent/{parent_id}', [CommentController::class,'showParentComment']);
+Route::get('/comments/parent/{parent_id}', [CommentController::class,'showChildComment']);
 
 // Отримання коментаря за ID
 Route::get('/comments/{id}', [CommentController::class, 'show']);

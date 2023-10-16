@@ -16,14 +16,14 @@ class CommentController extends Controller
     }
 
     public function showMainComment(){
-        $comments = Comment::query()->where('parent_id',null)->get();
+        $comments = Comment::query()->where('parent_id',null)->withCount('replies as replies_count')->get();
 
         return response()->json(['comments' => $comments], 200);
     }
 
-    public function showParentComment($parent_id){
+    public function showChildComment($parent_id){
 
-        $comments = Comment::query()->where('parent_id',$parent_id)->get();
+        $comments = Comment::query()->where('parent_id',$parent_id)->withCount('replies as replies_count')->get();
 
         return response()->json(['comments' => $comments], 200);
     }

@@ -1,6 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import axiosClient from "./axios-client.js";
+import CommentSearch from "./componets/CommentSearch.jsx";
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+function Comment({ comment, handleReplyModeChange }) {
+    const [replies, setReplies] = useState([]);
+    const [isShowReply, setIsShowReply] = useState(false);
+
+    useEffect(() => {
+        if (isShowReply) {
+            axiosClient.get(`/comments/parent/${comment.id}`)
+                .then((response) => {
+                    setReplies(response.data.comments);
+                })
+                .catch((error) => {
+                    console.error('Помилка отримання коментарів: ', error);
+                });
+        } else {
+            setReplies([]);
+        }
+    }, [isShowReply, comment.id]);
+
+    const toggleShowReplies = () => {
+        setIsShowReply(!isShowReply);
+    }
+
+    return (
+        <li key={comment.id}>
+            <div className="message">
+                <div className="message-header">
+                    <div>
+                        <strong>{comment.user_name}</strong>
+                    </div>
+                    <div className="message-date">
+                        {formatDate(comment.created_at)}
+                    </div>
+                    <a className="reply-btn" onClick={() => handleReplyModeChange(comment)}>Reply</a>
+                </div>
+                <div className="message-text" dangerouslySetInnerHTML={{ __html: comment.text }}>
+
+                </div>
+                <div className="message-show-reply">
+                    {}
+                    <a onClick={toggleShowReplies}>
+                        {isShowReply ?
+
+                            "Hide replies"
+                            :
+                            (comment.replies_count > 0?"Show replies": "")
+                            }
+                    </a>
+                </div>
+            </div>
+            {isShowReply && (
+                <ul>
+                    {replies.map((reply) => (
+                        <Comment key={reply.id} comment={reply} handleReplyModeChange={handleReplyModeChange} />
+                    ))}
+                </ul>
+            )}
+        </li>
+    );
+}
+
 
 function CommentApp() {
     const [comments, setComments] = useState([]);
@@ -82,8 +150,6 @@ function CommentApp() {
             .then((response) => {
                 setComments([...comments, response.data]);
                 setNewComment('');
-                setUsername('');
-                setEmail('');
                 setIsSending(false);
             })
             .catch((error) => {
@@ -91,6 +157,7 @@ function CommentApp() {
                 setIsSending(false);
             });
     };
+
 
     return (
         <div>
@@ -141,32 +208,20 @@ function CommentApp() {
                     <button onClick={handleAddComment}>Додати коментар</button>
                 </div>
             </div>
-
+            <div>
+                <CommentSearch/>
+            </div>
             {isLoading ? (
                 <p>Loading...</p>
             ) : (
-                <ul>
-                    {comments.map((comment) => (
-                        <li key={comment.id}>
-                            <strong>{comment.user_name}</strong> ({comment.email}):
-                            <p>{comment.text}</p>
-                            <a onClick={() => handleReplyModeChange(comment.id)}>Reply</a>
-                            <a onClick={() => handleShowReplies(comment.id)}>Show replies</a>
-                            {comment.replies && (
-                                <ul>
-                                    {comment.replies.map((reply) => (
-                                        <li key={reply.id}>
-                                            <strong>{reply.user_name}</strong> ({reply.email}):
-                                            <p>{reply.text}</p>
-                                            <a onClick={() => handleReplyModeChange(reply.id)}>Reply</a>
-                                            <a onClick={() => handleShowReplies(reply.id)}>Show replies</a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+                <div className="comments-container">
+                    <ul>
+                        {comments.map((comment) => (
+                            <Comment key={comment.id} comment={comment} handleReplyModeChange={handleReplyModeChange}/>
+                        ))}
+                    </ul>
+                </div>
+
             )}
         </div>
     );
