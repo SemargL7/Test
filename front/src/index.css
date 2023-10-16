@@ -67,3 +67,33 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.comment-form{
+    padding: 20px;
+    margin-left: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #3f3e3e;
+    border-radius: 10px;
+    border: white solid 1px;
+}
+.comment-form .reply{
+    justify-items: center;
+}
+.comment-form .reply svg{
+    fill: white;
+    stroke: white;
+}
+
+.form-block{
+    background-color: #2d2f2d;
+    padding: 20px;
+    display: block;
+    text-align: center;
+}
+.form-block input{
+    display: block;
+    margin-top: 5px;
+    width: 100%;
+}
