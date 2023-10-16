@@ -25,6 +25,12 @@ Route::post('/comments', [CommentController::class, 'store']);
 // Отримання всіх коментарів
 Route::get('/comments', [CommentController::class, 'index']);
 
+//Отримання основні коментарів
+Route::get('/comments/main', [CommentController::class,'showMainComment']);
+
+//Отримання основні коментарів
+Route::get('/comments/parent/{parent_id}', [CommentController::class,'showParentComment']);
+
 // Отримання коментаря за ID
 Route::get('/comments/{id}', [CommentController::class, 'show']);
 

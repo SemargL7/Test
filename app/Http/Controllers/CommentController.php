@@ -15,6 +15,19 @@ class CommentController extends Controller
         return response()->json(['comments' => $comments], 200);
     }
 
+    public function showMainComment(){
+        $comments = Comment::query()->where('parent_id',null)->get();
+
+        return response()->json(['comments' => $comments], 200);
+    }
+
+    public function showParentComment($parent_id){
+
+        $comments = Comment::query()->where('parent_id',$parent_id)->get();
+
+        return response()->json(['comments' => $comments], 200);
+    }
+
     public function store(Request $request)
     {
         // Валідація введених даних

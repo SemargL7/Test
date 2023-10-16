@@ -15,7 +15,7 @@ function CommentApp() {
     useEffect(() => {
         setIsLoading(true);
 
-        axiosClient.get('/comments')
+        axiosClient.get('/comments/main')
             .then((response) => {
                 setComments(response.data.comments);
                 setIsLoading(false);
@@ -45,6 +45,29 @@ function CommentApp() {
     const handleReplyModeChange = (command) => {
         setParent(command)
     };
+
+    const handleShowReplies = (parent_id) => {
+
+        axiosClient.get(`/comments/parent/${parent_id}`)
+            .then((response) => {
+                // Update the comments by adding replies to the parent comment
+                const updatedComments = comments.map(comment => {
+                    if (comment.id === parent_id) {
+                        return {
+                            ...comment,
+                            replies: response.data.comments,
+                        };
+                    }
+                    return comment;
+                });
+
+                setComments(updatedComments);
+            })
+            .catch((error) => {
+                console.error('Помилка отримання коментарів: ', error);
+            });
+    };
+
 
     const handleAddComment = () => {
         setIsSending(true);
@@ -105,7 +128,7 @@ function CommentApp() {
                     <input
                         type="url"
                         placeholder="Ваш home page"
-                        value={email}
+                        value={homePage}
                         onChange={handleHomePageChange}
                     />
                     <input
@@ -127,7 +150,20 @@ function CommentApp() {
                         <li key={comment.id}>
                             <strong>{comment.user_name}</strong> ({comment.email}):
                             <p>{comment.text}</p>
-                            <a onClick={() => handleReplyModeChange(comment)}>Reply</a>
+                            <a onClick={() => handleReplyModeChange(comment.id)}>Reply</a>
+                            <a onClick={() => handleShowReplies(comment.id)}>Show replies</a>
+                            {comment.replies && (
+                                <ul>
+                                    {comment.replies.map((reply) => (
+                                        <li key={reply.id}>
+                                            <strong>{reply.user_name}</strong> ({reply.email}):
+                                            <p>{reply.text}</p>
+                                            <a onClick={() => handleReplyModeChange(reply.id)}>Reply</a>
+                                            <a onClick={() => handleShowReplies(reply.id)}>Show replies</a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </li>
                     ))}
                 </ul>

@@ -13,7 +13,6 @@ class File extends Model
         'file_data',
     ];
 
-    // Додайте відношення до коментаря, до якого належить файл
     public function comment()
     {
         return $this->belongsTo(Comment::class);
