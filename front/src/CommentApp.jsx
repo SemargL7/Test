@@ -77,13 +77,20 @@ function CommentApp() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [homePage, setHomePage] = useState(null);
+    const [filterWord, setFilterWord] = useState('');
+    const [sortLIFO, setSortLIFO] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [isSending, setIsSending] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
 
-        axiosClient.get('/comments/main')
+        axiosClient.get('/comments/main',{
+            params: {
+                sort: sortLIFO,
+                filter_word: filterWord,
+            }
+        })
             .then((response) => {
                 setComments(response.data.comments);
                 setIsLoading(false);
@@ -92,7 +99,7 @@ function CommentApp() {
                 console.error('Помилка отримання коментарів: ', error);
                 setIsLoading(false);
             });
-    }, [isSending]);
+    }, [isSending,sortLIFO,filterWord]);
 
     const handleNewCommentChange = (event) => {
         setNewComment(event.target.value);
@@ -209,7 +216,7 @@ function CommentApp() {
                 </div>
             </div>
             <div>
-                <CommentSearch/>
+                <CommentSearch setFilterWord={setFilterWord} setSortLIFO={setSortLIFO}/>
             </div>
             {isLoading ? (
                 <p>Loading...</p>

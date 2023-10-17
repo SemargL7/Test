@@ -15,11 +15,27 @@ class CommentController extends Controller
         return response()->json(['comments' => $comments], 200);
     }
 
-    public function showMainComment(){
-        $comments = Comment::query()->where('parent_id',null)->withCount('replies as replies_count')->get();
+    public function showMainComment(Request $request){
+        $sort = $request->input('sort');
+        $filterWord = $request->input('filter_word');
+
+        $query = Comment::query()->where('parent_id', null);
+
+        if ($filterWord) {
+            $query->where('user_name', 'LIKE', "%$filterWord%");
+        }
+
+        if ($sort === 'true') {
+            $query->orderBy('created_at', 'asc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $comments = $query->withCount('replies as replies_count')->get();
 
         return response()->json(['comments' => $comments], 200);
     }
+
 
     public function showChildComment($parent_id){
 
