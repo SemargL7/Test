@@ -20,18 +20,29 @@ body {
   min-height: 100vh;
 }
 
-
-
+.main{
+    display: flex;
+}
+.message-container{
+    width: 100%;
+}
 .comment-form{
-    padding: 20px;
-    margin-left: 10px;
-    position: fixed;
+    top: 0;
+    align-self: flex-start;
+    position: sticky;
+    width: 50%;
     bottom: 0;
     left: 0;
     background-color: #3f3e3e;
     border-radius: 10px;
     border: white solid 1px;
     text-align: center;
+}
+.comment-form textarea{
+    min-width: 100%;
+    max-width: 100%;
+    max-height: 200px;
+    min-height: 200px;
 }
 .comment-form .reply{
     justify-items: center;
@@ -154,4 +165,50 @@ body {
 }
 .search-select option{
     border:0;
+}
+.preview-bg{
+    top:0;
+    left: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(19, 21, 56, 0.44);
+}
+.preview-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #595959;
+    max-width: 70%;
+    padding: 20px;
+
+    opacity: 0;
+    animation: fade-in 0.5s ease-in forwards;
+    border: white solid 5px;
+}
+.preview-window img{
+    width: 100%;
+}
+.preview-window .preview-text{
+    width: 100%;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.pre-preview{
+    display: flex;
+    padding: 5px;
+    text-align: left;
+}
+.pre-preview img,.pre-preview svg{
+    background-color: #a0aec0;
+    max-height: 50px;
+    border: white solid 1px;
 }

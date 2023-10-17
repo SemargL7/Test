@@ -9,13 +9,12 @@ class CommentController extends Controller
 {
     public function index()
     {
-        // Отримайте всі коментарі тут і поверніть їх у відповідь
         $comments = Comment::all();
 
         return response()->json(['comments' => $comments], 200);
     }
 
-    public function showMainComment(Request $request){
+    public function showMainComment(Request $request) {
         $sort = $request->input('sort');
         $filterWord = $request->input('filter_word');
 
@@ -31,29 +30,28 @@ class CommentController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $comments = $query->withCount('replies as replies_count')->get();
+        $comments = $query->withCount('replies as replies_count')->with('files')->get();
+
 
         return response()->json(['comments' => $comments], 200);
     }
 
-
-    public function showChildComment($parent_id){
-
-        $comments = Comment::query()->where('parent_id',$parent_id)->withCount('replies as replies_count')->get();
+    public function showChildComment($parent_id) {
+        $comments = Comment::query()->where('parent_id', $parent_id)->withCount('replies as replies_count')->with('files')->get();
 
         return response()->json(['comments' => $comments], 200);
     }
 
     public function store(Request $request)
     {
-        // Валідація введених даних
         $request->validate([
             'user_name' => 'required|string',
             'email' => 'required|email',
             'text' => 'required|string',
+            'parent_id' => 'nullable|integer',
+            'file' => 'nullable|mimes:jpeg,png,gif,txt',
         ]);
 
-        // Створення нового коментаря
         $comment = Comment::create([
             'user_name' => $request->input('user_name'),
             'email' => $request->input('email'),
@@ -62,12 +60,24 @@ class CommentController extends Controller
             'parent_id' => $request->input('parent_id'),
         ]);
 
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $file->storeAs('uploads', $fileName);
+
+            $comment->files()->create([
+                'file_name' => $fileName,
+                'file_type' => $file->getClientMimeType(),
+                'path' => 'uploads/' . $fileName,
+            ]);
+        }
+
         return response()->json(['comment' => $comment], 201);
     }
 
     public function show($id)
     {
-        // Отримайте коментар за ідентифікатором
+
         $comment = Comment::find($id);
 
         if (!$comment) {
@@ -79,7 +89,7 @@ class CommentController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Валідація введених даних для оновлення
+
         $request->validate([
             'user_name' => 'required|string',
             'email' => 'required|email',
@@ -92,7 +102,7 @@ class CommentController extends Controller
             return response()->json(['message' => 'Коментар не знайдено'], 404);
         }
 
-        // Оновлення коментаря
+
         $comment->update([
             'user_name' => $request->input('user_name'),
             'email' => $request->input('email'),

@@ -10,8 +10,10 @@ class File extends Model
         'comment_id',
         'file_name',
         'file_type',
-        'file_data',
+        'path',
     ];
+
+
 
     public function comment()
     {

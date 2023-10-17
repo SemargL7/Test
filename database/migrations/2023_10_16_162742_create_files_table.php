@@ -13,13 +13,12 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('comment_id');
             $table->string('file_name');
             $table->string('file_type');
-            $table->binary('file_data');
+            $table->text('path');
+            $table->unsignedBigInteger('comment_id');
             $table->timestamps();
 
-            // Додайте зовнішній ключ для зв'язку з таблицею "comments"
             $table->foreign('comment_id')->references('id')->on('comments');
         });
     }

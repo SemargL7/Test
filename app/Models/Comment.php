@@ -27,4 +27,9 @@ class Comment extends Model
     {
         return $this->belongsTo(Comment::class, 'parent_id');
     }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import axiosClient from "./axios-client.js";
+import Preview from "./componets/Preview.jsx";
 import CommentSearch from "./componets/CommentSearch.jsx";
 
 function formatDate(dateString) {
@@ -12,6 +13,7 @@ function formatDate(dateString) {
 function Comment({ comment, handleReplyModeChange }) {
     const [replies, setReplies] = useState([]);
     const [isShowReply, setIsShowReply] = useState(false);
+    const [isPreview, setIsPreview] = useState(false);
 
     useEffect(() => {
         if (isShowReply) {
@@ -43,20 +45,22 @@ function Comment({ comment, handleReplyModeChange }) {
                     </div>
                     <a className="reply-btn" onClick={() => handleReplyModeChange(comment)}>Reply</a>
                 </div>
-                <div className="message-text" dangerouslySetInnerHTML={{ __html: comment.text }}>
-
+                <div className="message-text" dangerouslySetInnerHTML={{ __html: comment.text }}></div>
+                <div>
+                    {comment.files[0] && (
+                        <Preview id={comment.id} file={comment.files[0]} isPreview={isPreview} setIsPreview={setIsPreview} />
+                    )}
                 </div>
                 <div className="message-show-reply">
-                    {}
                     <a onClick={toggleShowReplies}>
                         {isShowReply ?
-
                             "Hide replies"
                             :
-                            (comment.replies_count > 0?"Show replies": "")
-                            }
+                            (comment.replies_count > 0 ? "Show replies" : "")
+                        }
                     </a>
                 </div>
+
             </div>
             {isShowReply && (
                 <ul>
@@ -69,7 +73,6 @@ function Comment({ comment, handleReplyModeChange }) {
     );
 }
 
-
 function CommentApp() {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
@@ -81,11 +84,13 @@ function CommentApp() {
     const [sortLIFO, setSortLIFO] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [isSending, setIsSending] = useState(false);
+    const [file, setFile] = useState(null);
+    const [isPreview, setIsPreview] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
 
-        axiosClient.get('/comments/main',{
+        axiosClient.get('/comments/main', {
             params: {
                 sort: sortLIFO,
                 filter_word: filterWord,
@@ -99,7 +104,7 @@ function CommentApp() {
                 console.error('Помилка отримання коментарів: ', error);
                 setIsLoading(false);
             });
-    }, [isSending,sortLIFO,filterWord]);
+    }, [isSending, sortLIFO, filterWord]);
 
     const handleNewCommentChange = (event) => {
         setNewComment(event.target.value);
@@ -117,46 +122,48 @@ function CommentApp() {
         setHomePage(event.target.value);
     };
 
-    const handleReplyModeChange = (command) => {
-        setParent(command)
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+
+        if (selectedFile) {
+            setFile(selectedFile)
+        }
     };
 
-    const handleShowReplies = (parent_id) => {
-
-        axiosClient.get(`/comments/parent/${parent_id}`)
-            .then((response) => {
-                // Update the comments by adding replies to the parent comment
-                const updatedComments = comments.map(comment => {
-                    if (comment.id === parent_id) {
-                        return {
-                            ...comment,
-                            replies: response.data.comments,
-                        };
-                    }
-                    return comment;
-                });
-
-                setComments(updatedComments);
-            })
-            .catch((error) => {
-                console.error('Помилка отримання коментарів: ', error);
-            });
+    const handleReplyModeChange = (command) => {
+        setParent(command)
     };
 
 
     const handleAddComment = () => {
         setIsSending(true);
 
-        axiosClient.post('/comments', {
-            parent_id: parent.id,
-            user_name: username,
-            email: email,
-            home_page: homePage,
-            text: newComment
+        const formData = new FormData();
+        if (parent){
+            formData.append('parent_id', parent.id);
+        }
+
+        formData.append('user_name', username);
+        formData.append('email', email);
+        formData.append('home_page', homePage);
+        formData.append('text', newComment);
+
+        if (file) {
+            formData.append('file', file);
+        }
+
+        axiosClient.post('/comments', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         })
             .then((response) => {
                 setComments([...comments, response.data]);
                 setNewComment('');
+                setUsername('');
+                setEmail('');
+                setImage(null);
+                setTextFile(null);
                 setIsSending(false);
             })
             .catch((error) => {
@@ -165,9 +172,8 @@ function CommentApp() {
             });
     };
 
-
     return (
-        <div>
+        <div className="main">
             <div className="comment-form">
                 {
                     !parent ?
@@ -181,7 +187,6 @@ function CommentApp() {
                                 <span>To: {parent.user_name}</span>
                                 <a onClick={() => handleReplyModeChange(null)}><svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 64 64" stroke-width="3"><line x1="8.06" y1="8.06" x2="55.41" y2="55.94"/><line x1="55.94" y1="8.06" x2="8.59" y2="55.94"/></svg></a>
                             </div>
-
                         </div>
                 }
                 <div className="form-block">
@@ -206,7 +211,12 @@ function CommentApp() {
                         onChange={handleHomePageChange}
                     />
                     <input
-                        type="text"
+                        type="file"
+                        accept="image/*,.txt"
+                        onChange={handleFileChange}
+                    />
+
+                    <textarea
                         placeholder="Напишіть ваш коментар"
                         value={newComment}
                         onChange={handleNewCommentChange}
@@ -215,21 +225,21 @@ function CommentApp() {
                     <button onClick={handleAddComment}>Додати коментар</button>
                 </div>
             </div>
-            <div>
+            <div className="message-container">
                 <CommentSearch setFilterWord={setFilterWord} setSortLIFO={setSortLIFO}/>
+                {isLoading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div className="comments-container">
+                        <ul>
+                            {comments.map((comment) => (
+                                <Comment key={comment.id} comment={comment} handleReplyModeChange={handleReplyModeChange} />
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
-            {isLoading ? (
-                <p>Loading...</p>
-            ) : (
-                <div className="comments-container">
-                    <ul>
-                        {comments.map((comment) => (
-                            <Comment key={comment.id} comment={comment} handleReplyModeChange={handleReplyModeChange}/>
-                        ))}
-                    </ul>
-                </div>
 
-            )}
         </div>
     );
 }
