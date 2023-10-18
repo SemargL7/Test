@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #131538;
+  background-color: #F0F3F3;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,52 +20,28 @@ body {
   min-height: 100vh;
 }
 
+button {
+    border: 0;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 17px;
+    background-color: #606a77;
+}
+button:hover {
+    background-color: #4b5563;
+}
+
 .main{
     display: flex;
+
+    margin: auto;
 }
 .message-container{
     width: 100%;
 }
-.comment-form{
-    top: 0;
-    align-self: flex-start;
-    position: sticky;
-    width: 50%;
-    bottom: 0;
-    left: 0;
-    background-color: #3f3e3e;
-    border-radius: 10px;
-    border: white solid 1px;
-    text-align: center;
-}
-.comment-form textarea{
-    min-width: 100%;
-    max-width: 100%;
-    max-height: 200px;
-    min-height: 200px;
-}
-.comment-form .reply{
-    justify-items: center;
-}
-.comment-form .reply svg{
-    fill: white;
-    stroke: white;
-    cursor: pointer;
-}
-
-.form-block{
-    background-color: #2d2f2d;
-    padding: 20px;
-    display: block;
-    text-align: center;
-}
-.form-block input{
-    display: block;
-    margin-top: 5px;
-    width: 100%;
-}
 
 .comments-container{
+
     max-width: 700px;
     margin: auto;
 
@@ -75,19 +51,25 @@ body {
     list-style-type: none;
 }
 .message-header{
-    background-color: #213547;
+    background-color: #CDDDDE;
     display: flex;
     padding: 10px;
-    border-radius: 10px 10px 0 0;
+
 }
 .message-header div{
     margin-right: 10px;
 }
 .message-text{
     text-align: left;
-    background-color: #2a445b;
     padding: 10px;
-    border-radius:0 0 10px 10px ;
+
+}
+.message{
+    background-color: #ffffff;
+    width: 100%;
+    margin: 10px;
+    color: #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .reply-btn{
@@ -96,7 +78,10 @@ body {
 }
 .message-show-reply{
     cursor: pointer;
-    min-height: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    color: #4b5563;
 }
 
 .message-date{
@@ -105,10 +90,10 @@ body {
 
 
 .message-text code{
-    background-color: #131538;
+    background-color: #343491;
     padding: 5px;
-    border-radius: 5px;
-
+    color: white;
+    border: solid 1px black;
 }
 
 .message-text a{
@@ -126,13 +111,9 @@ body {
     max-width: 700px;
     width: 100%;
     display: flex;
+
 }
-.search-bar button{
-    font-size: 16px;
-    border-radius: 0 5px 5px 0;
-    box-shadow: none;
-    border: 0;
-}
+
 .search-bar button:active {
     /* Скасовуємо ефект нажаття */
     background-color: #405972; /* Можна встановити кольори, які вам потрібні */
@@ -143,25 +124,28 @@ body {
     width: 100%;
     min-height: 30px;
     font-size: 16px;
+    background-color: #AEB4B2;
+    border: 1px solid #cbd5e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 .search-nav{
     margin: auto;
     max-width: 700px;
     width: 100%;
 }
 .search-select{
-    border-radius: 5px;
+    background-color: #949494;
+
     min-height: 40px;
     font-size: 16px;
     font-weight: 600;
 }
 .search-select:hover{
-    background-color: #2a445b;
+    background-color: #888888;
 }
 .search-select:focus{
 
-    border-radius: 5px 5px 0 0;
+
 }
 .search-select option{
     border:0;
@@ -179,19 +163,21 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #595959;
+    background-color: rgba(89, 89, 89, 0.12);
     max-width: 70%;
-    padding: 20px;
-
+    padding: 5px;
     opacity: 0;
     animation: fade-in 0.5s ease-in forwards;
-    border: white solid 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .preview-window img{
     width: 100%;
 }
-.preview-window .preview-text{
+.preview-window iframe{
+    background-color: #363838;
     width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 @keyframes fade-in {
@@ -203,7 +189,6 @@ body {
     }
 }
 .pre-preview{
-    display: flex;
     padding: 5px;
     text-align: left;
 }
@@ -211,4 +196,136 @@ body {
     background-color: #a0aec0;
     max-height: 50px;
     border: white solid 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.comment-form {
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+    position: fixed;
+    bottom: 0;
+    background-color: #f2f2f2;
+    text-align: center;
+    box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-form h3 {
+    margin-top: 10px;
+    color: #333;
+}
+
+.form-block {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-block input{
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    font-size: 15px;
+    color: black;
+}
+.form-block textarea {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    font-size: 15px;
+    width: 100%;
+    color: black;
+    resize: vertical;
+}
+
+.form-block input[type="file"] {
+    display: none;
+}
+
+.form-block .form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.form-block button {
+    background-color: #333; /* Темний колір фону */
+    color: #fff; /* Колір тексту */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-block button:hover {
+    background-color: #000; /* Колір фону при наведенні */
+}
+
+.form-block textarea {
+    resize: none;
+}
+
+.reply {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reply span {
+    color: #333;
+}
+
+.reply a {
+    margin-left: 10px;
+    color: #007BFF;
+}
+
+.reply a:hover {
+    text-decoration: underline;
+}
+
+.image-upload svg {
+    fill: #333;
+}
+
+.image-upload svg:hover {
+    fill: #007BFF;
+}
+.form-block-send{
+    display: flex;
+    align-items: center;
+}
+
+.text-tags{
+    display: flex;
+}
+.text-tags button{
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+}
+
+.captcha{
+    color: black;
+    margin: 5px;
+}
+.captcha button{
+    border-radius: 0;
+}
+
+.captcha-form{
+    display: inline-flex;
 }
