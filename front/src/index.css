@@ -283,6 +283,10 @@ button:hover {
     align-items: center;
     justify-content: center;
 }
+.reply svg{
+    stroke: black;
+}
+
 
 .reply span {
     color: #333;
@@ -327,5 +331,9 @@ button:hover {
 }
 
 .captcha-form{
+    display: inline-flex;
+}
+
+.filter-type{
     display: inline-flex;
 }

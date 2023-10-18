@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 
-function CommentSearch({ setFilterWord, setSortLIFO }) {
+function CommentSearch({ setFilterWord, setSortLIFO}) {
     const [searchText, setSearchText] = useState('');
-    const [isSortNewest, setIsSortNewest] = useState(true); // Додайте стан для сортування
+    const [searchType, setSearchType] = useState('text');
+    const [isSortNewest, setIsSortNewest] = useState(true);
 
     const handleInputChange = (e) => {
         setSearchText(e.target.value);
     }
 
     const handleSearch = () => {
-        setFilterWord(searchText);
+        setFilterWord({ type: searchType, value: searchText });
     }
 
     const handleSortChange = (e) => {
@@ -17,9 +18,20 @@ function CommentSearch({ setFilterWord, setSortLIFO }) {
         setSortLIFO(e.target.value === 'true');
     }
 
+    const handleSearchTypeChange = (e) => {
+        setSearchType(e.target.value);
+    }
+
     return (
         <div className="search-nav">
             <div className="search-bar">
+                <div>
+                    <select className="search-select" onChange={handleSearchTypeChange} value={searchType}>
+                        <option value="text">Text</option>
+                        <option value="username">Username</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
                 <input
                     type="text"
                     value={searchText}
@@ -33,6 +45,7 @@ function CommentSearch({ setFilterWord, setSortLIFO }) {
                     <option value={false}>Latest</option>
                 </select>
             </div>
+
         </div>
     );
 }

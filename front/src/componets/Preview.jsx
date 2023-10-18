@@ -10,7 +10,10 @@ function Preview({ isPreview, setIsPreview, file }) {
         <div className="preview">
             <div className="pre-preview" onClick={handleOpenClosePreview}>
                 {file && (
-                    file.file_type.includes("image") ? (
+                    file.file_type.includes("png") ||
+                    file.file_type.includes("jpg") ||
+                    file.file_type.includes("jpeg") ||
+                    file.file_type.includes("gif") ? (
                         <img src={`${import.meta.env.VITE_API_BASE_URL}/download/${file.path}`} alt="Image" />
                     ) : (
                         <svg
@@ -50,7 +53,10 @@ function Preview({ isPreview, setIsPreview, file }) {
                 <div className="preview-bg" onClick={handleOpenClosePreview}>
                     <div className="preview-window">
                         {file && (
-                            file.file_type.includes("image") ? (
+                            file.file_type.includes("png") ||
+                            file.file_type.includes("jpg") ||
+                            file.file_type.includes("jpeg") ||
+                            file.file_type.includes("gif") ? (
                                 <img src={`${import.meta.env.VITE_API_BASE_URL}/download/${file.path}`} alt="Image" />
                             ) : (
                                 file.file_type.includes("text") ? (

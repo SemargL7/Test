@@ -95,7 +95,8 @@ function CommentApp() {
         axiosClient.get('/comments/main', {
             params: {
                 sort: sortLIFO,
-                filter_word: filterWord,
+                filter_word: filterWord.value,
+                filter_type : filterWord.type
             }
         })
             .then((response) => {
@@ -126,7 +127,13 @@ function CommentApp() {
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
-
+        if (selectedFile && selectedFile.type.startsWith('text/')) {
+            if (selectedFile.size > 100000) {
+                alert('Розмір файлу перевищує 100 КБ і не може бути завантажений.');
+            } else {
+                setFile(selectedFile);
+            }
+        }
         if (selectedFile) {
             setFile(selectedFile)
         }
@@ -190,22 +197,15 @@ function CommentApp() {
         }
     }
     function isValidComment(comment) {
-        // Регулярний вираз для вилучення всіх HTML тегів із коментаря
         const tagRegex = /<[^>]+>/g;
-
-        // Видаляємо всі теги із коментаря
         const textWithoutTags = comment.replace(tagRegex, '');
-
-        // Регулярний вираз для перевірки коментаря на наявність інших тегів
         const otherTagsRegex = /<\/?\s*([a|i|strong|code]+)\s*>/gi;
 
-        // Видаляємо всі заборонені теги, зберігаючи дозволені (i, a, strong, code)
         const allowedTags = ['i', 'a', 'strong', 'code'];
         const cleanedComment = textWithoutTags.replace(otherTagsRegex, (match, p1) => {
             return allowedTags.includes(p1.toLowerCase()) ? match : '';
         });
 
-        // Перевіряємо, чи осталось щось окрім дозволених тегів
         return cleanedComment === textWithoutTags;
     }
     const handleCaptchaVerification = (isVerified) => {
@@ -283,7 +283,7 @@ function CommentApp() {
                                 </svg>
                             </label>
 
-                            <input id="file-input" type="file" hidden/>
+                            <input id="file-input" type="file" onChange={handleFileChange} hidden/>
                         </div>
                         <textarea
                             placeholder="Напишіть ваш коментар"
