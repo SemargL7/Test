@@ -1,3 +1,19 @@
+<h1>SPA</h1>
+<h2>Usage</h2>
+<span>Start your web server and access the application in your browser.</span>
+
+<h2>Features</h2>
+<ul>
+    <li>Users can add comments.</li>
+    <li>Nested comments are supported.</li>
+    <li>Comments can be sorted by User Name, E-mail, or Date.</li>
+    <li>Pagination with 25 comments per page.</li>
+    <li>Automatic resizing and validation for image and text files.</li>
+    <li>Viewing files with visual effects.</li>
+    <li>Allowed HTML tags: < a >, < code >, < i >, < strong ></li>
+</ul>
+
+
 <h2>Docker:</h2>
 <ul>
 <li><code>docker-compose up --build</code></li>
