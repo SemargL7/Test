@@ -422,3 +422,6 @@ button:hover {
 .buttonShowForm{
     position: fixed;
 }
+.comments-container ul{
+    padding: 0;
+}
