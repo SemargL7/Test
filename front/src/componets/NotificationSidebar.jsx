@@ -67,10 +67,8 @@ const NotificationSidebar = () => {
                                 <div className="message-date">
                                     {formatDate(notification.message[0].updated_at)}
                                 </div>
-                            </div>
-                            <div>
-                                <div className="message-text">
-                                    {notification.message[0].text}
+                                <div>
+                                    {notification.message[0].email}
                                 </div>
                             </div>
                         </div>
