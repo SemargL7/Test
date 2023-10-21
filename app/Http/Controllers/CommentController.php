@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
 use App\Models\Comment;
 use App\Rules\ValidComment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -19,6 +21,7 @@ class CommentController extends Controller
     }
 
     public function showMainComment(Request $request) {
+        $perPage = 25;
         $sort = $request->input('sort');
         $filterType = $request->input('filter_type');
         $filterWord = $request->input('filter_word');
@@ -28,9 +31,9 @@ class CommentController extends Controller
 
         if($filterType == "username"){
             $filterColumn = 'user_name';
-        }else if($filterType == 'email'){
+        } else if($filterType == 'email'){
             $filterColumn = 'email';
-        }else{
+        } else {
             $filterColumn = 'text';
         }
 
@@ -39,13 +42,15 @@ class CommentController extends Controller
         }
 
         if ($sort === 'true') {
-            $query->orderBy('created_at', 'asc');
-        } else {
             $query->orderBy('created_at', 'desc');
+        } else {
+            $query->orderBy('created_at', 'asc');
         }
 
-        $comments = $query->withCount('replies as replies_count')->with('files')->get();
-
+        $comments = $query
+            ->withCount('replies as replies_count')
+            ->with('files')
+            ->paginate($perPage);
 
         return response()->json(['comments' => $comments], 200);
     }
@@ -110,6 +115,7 @@ class CommentController extends Controller
                     'path' => 'uploads/' . $fileName,
                 ]);
             }
+            event(new CommentCreated($comment));
 
             return response()->json(['comment' => $comment], 201);
         });

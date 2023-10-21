@@ -105,6 +105,33 @@ button:hover {
 .message-text strong{
 
 }
+.comment-preview{
+    color: black;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #000000;
+    cursor: pointer;
+}
+
+.pagination li.active {
+    background-color: #032d56;
+    color: white;
+}
+
+.pagination li:hover {
+    background-color: #007BFF;
+    color: white;
+}
 
 .search-bar{
     margin: auto;
@@ -336,4 +363,38 @@ button:hover {
 
 .filter-type{
     display: inline-flex;
+}
+
+.notification-sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Початкове значення для схованої панелі */
+    width: 300px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    transition: right 0.3s; /* Анімація руху панелі */
+}
+
+.notification-sidebar h2 {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    margin: 0;
+}
+
+.notification-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-sidebar li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.notification-sidebar.show {
+    right: 0; /* Показати панель */
 }

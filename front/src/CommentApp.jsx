@@ -4,6 +4,8 @@ import axiosClient from "./axios-client.js";
 import Preview from "./componets/Preview.jsx";
 import CommentSearch from "./componets/CommentSearch.jsx";
 import Captcha from "./componets/Captcha.jsx";
+import ReactPaginate from "react-paginate";
+import NotificationSidebar from "./componets/NotificationSidebar.jsx";
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -88,6 +90,25 @@ function CommentApp() {
     const [file, setFile] = useState(null);
     const [isPreview, setIsPreview] = useState(false);
     const [isCaptchaValid, setIsCaptchaValid] = useState(false);
+    const [commentPreview, setCommentPreview] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1)
+    const [notificationShowed, setNotificationShowed] =  useState(false)
+    const [formData, setFormData] = useState({
+        username: localStorage.getItem('username') || '',
+        email: localStorage.getItem('email') || '',
+        homePage: localStorage.getItem('homePage') || '',
+    });
+
+    useEffect(() => {
+        const savedUsername = localStorage.getItem('username') || '';
+        const savedEmail = localStorage.getItem('email') || '';
+        const savedHomePage = localStorage.getItem('homePage') || '';
+
+        setUsername(savedUsername);
+        setEmail(savedEmail);
+        setHomePage(savedHomePage);
+    }, []);
 
     useEffect(() => {
         setIsLoading(true);
@@ -96,34 +117,53 @@ function CommentApp() {
             params: {
                 sort: sortLIFO,
                 filter_word: filterWord.value,
-                filter_type : filterWord.type
+                filter_type : filterWord.type,
+                page: currentPage,
             }
         })
             .then((response) => {
-                setComments(response.data.comments);
+                setComments(response.data.comments.data);
+                setTotalPages(response.data.comments.last_page);
                 setIsLoading(false);
             })
             .catch((error) => {
                 console.error('Помилка отримання коментарів: ', error);
                 setIsLoading(false);
             });
-    }, [isSending, sortLIFO, filterWord]);
-
-    const handleNewCommentChange = (event) => {
-        setNewComment(event.target.value);
+    }, [isSending, sortLIFO, filterWord, currentPage]);
+    const handlePageChange = ({ selected }) => {
+        setCurrentPage(selected + 1);
     };
+    const handleNewCommentChange = (event) => {
+        const newCommentValue = event.target.value;
+        setNewComment(newCommentValue);
+
+        const cleanedCommentPreview = removeInvalidTags(newCommentValue);
+        setCommentPreview(cleanedCommentPreview);
+    };
+    function removeInvalidTags(comment) {
+        const allowedTagsRegex = /<(?!\/?(a|i|strong|code)\b)[^>]+>/gi;
+        return comment.replace(allowedTagsRegex, '');
+    }
 
     const handleUsernameChange = (event) => {
-        setUsername(event.target.value);
+        const newUsername = event.target.value;
+        setUsername(newUsername);
+        localStorage.setItem('username', newUsername);
     };
 
     const handleEmailChange = (event) => {
-        setEmail(event.target.value);
+        const newEmail = event.target.value;
+        setEmail(newEmail);
+        localStorage.setItem('email', newEmail);
     };
 
     const handleHomePageChange = (event) => {
-        setHomePage(event.target.value);
+        const newHomePage = event.target.value;
+        setHomePage(newHomePage);
+        localStorage.setItem('homePage', newHomePage);
     };
+
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -211,6 +251,15 @@ function CommentApp() {
     const handleCaptchaVerification = (isVerified) => {
         console.log(isVerified)
         setIsCaptchaValid(isVerified);
+    };
+    const showNotificationSidebar = () => {
+        if (!notificationShowed){
+            document.querySelector('.notification-sidebar').classList.add('show');
+            setNotificationShowed(!notificationShowed)
+        }else {
+            document.querySelector('.notification-sidebar').classList.remove('show');
+            setNotificationShowed(!notificationShowed)
+        }
 
     };
     return (
@@ -223,14 +272,32 @@ function CommentApp() {
                 ) : (
                     <div className="comments-container">
                         <ul>
-                            {comments.map((comment) => (
+                            {
+                                comments.map((comment) => (
                                 <Comment key={comment.id} comment={comment} handleReplyModeChange={handleReplyModeChange} />
                             ))}
                         </ul>
                     </div>
                 )}
+                <div className="pagination">
+                    <ReactPaginate
+                        previousLabel={'previous'}
+                        nextLabel={'next'}
+                        breakLabel={'...'}
+                        pageCount={totalPages}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageChange}
+                        containerClassName={'pagination'}
+                        subContainerClassName={'pages pagination'}
+                        activeClassName={'active'}
+                    />
+                </div>
+
             </div>
             <div className="comment-form">
+                <button onClick={showNotificationSidebar}>Показати сповіщення</button>
+                <NotificationSidebar />
                 {
                     !parent ?
                         <div>
@@ -293,6 +360,10 @@ function CommentApp() {
                         />
                         <button onClick={handleAddComment}> send </button>
                     </div>
+                </div>
+                <div className="comment-preview">
+                    <h3>Preview</h3>
+                    <div className="message-text" dangerouslySetInnerHTML={{ __html: commentPreview }}></div>
                 </div>
             </div>
         </div>
