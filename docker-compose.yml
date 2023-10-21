@@ -1,0 +1,64 @@
+version: '3.7'
+services:
+
+
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+        working_dir: /app/backend
+        depends_on:
+            - db
+        networks:
+            - app
+        environment:
+            DB_HOST: db
+            DB_DATABASE: test_project_1
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            DB_ROOT_PASSWORD: root
+            PUSHER_APP_ID: 123456
+            PUSHER_APP_KEY: 123456
+            PUSHER_APP_SECRET: 123456
+            PUSHER_HOST: localhost
+            PUSHER_PORT: 6001
+            PUSHER_SCHEME: http
+            PUSHER_APP_CLUSTER: mt1
+        command: /bin/bash -c "php artisan serve --host=0.0.0.0 --port=8000 & php artisan websockets:serve --host=0.0.0.0 --port=6001"
+
+
+    frontend:
+        build:
+            context: ./front
+            dockerfile: Dockerfile
+        tty: true
+        working_dir: /app/frontend
+        ports:
+            - "3000:3000"
+        depends_on:
+            - backend
+        environment:
+            PUSHER_APP_ID: 123456
+            PUSHER_APP_KEY: 123456
+            PUSHER_APP_SECRET: 123456
+            PUSHER_HOST: localhost
+            PUSHER_PORT: 6001
+            PUSHER_SCHEME: http
+            PUSHER_APP_CLUSTER: mt1
+        networks:
+            - app
+
+    db:
+        image: mysql:5.7.22
+        environment:
+            MYSQL_DATABASE: 'test_project_1'
+            MYSQL_USER: 'root'
+            MYSQL_PASSWORD: 'root'
+            MYSQL_ROOT_PASSWORD: 'root'
+        networks:
+            - app
+networks:
+    app:
+        driver: bridge
