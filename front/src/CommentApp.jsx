@@ -20,7 +20,8 @@ function Comment({ comment, handleReplyModeChange }) {
 
     useEffect(() => {
         if (isShowReply) {
-            axiosClient.get(`/comments/parent/${comment.id}`)
+            axiosClient
+                .get(`/comments/parent/${comment.id}`)
                 .then((response) => {
                     setReplies(response.data.comments);
                 })
@@ -34,48 +35,63 @@ function Comment({ comment, handleReplyModeChange }) {
 
     const toggleShowReplies = () => {
         setIsShowReply(!isShowReply);
-    }
+    };
 
     return (
-        <li key={comment.id}>
-            <div className="message">
-                <div className="message-header">
-                    <div>
-                        <strong>{comment.user_name}</strong>
-                    </div>
-                    <div className="message-date">
-                        {formatDate(comment.created_at)}
-                    </div>
-                    <div>
-                        ({comment.email})
-                    </div>
-                    <a className="reply-btn" onClick={() => handleReplyModeChange(comment)}>Reply</a>
-                </div>
-                <div className="message-text" dangerouslySetInnerHTML={{ __html: comment.text }}></div>
-                <div>
+        <table className="message">
+            <tbody>
+            <tr className="message-header">
+                <td>
+                    <strong>{comment.user_name}</strong>
+                </td>
+                <td className="message-date">
+                    {formatDate(comment.created_at)}
+                </td>
+                <td>
+                    ({comment.email})
+                </td>
+                <td>
+                    <a className="reply-btn" onClick={() => handleReplyModeChange(comment)}>
+                        Reply
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td colSpan="4">
+                    <div className="message-text" dangerouslySetInnerHTML={{ __html: comment.text }}></div>
+                </td>
+            </tr>
+            <tr>
+                <td colSpan="4">
                     {comment.files && (
                         <Preview id={comment.id} file={comment.files[0]} isPreview={isPreview} setIsPreview={setIsPreview} />
                     )}
-                </div>
-
-            </div>
-            <div className="message-show-reply">
-                <a onClick={toggleShowReplies}>
-                    {isShowReply ?
-                        "Hide replies"
-                        :
-                        (comment.replies_count > 0 ? "Show replies(" + comment.replies_count +")": "")
-                    }
-                </a>
-            </div>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colSpan="4" className="reply">
+                    <a onClick={toggleShowReplies}>
+                        {isShowReply ?
+                            "Hide replies"
+                            :
+                            (comment.replies_count > 0 ? `Show replies(${comment.replies_count})` : "")
+                        }
+                    </a>
+                </td>
+            </tr>
             {isShowReply && (
-                <ul>
-                    {replies.map((reply) => (
-                        <Comment key={reply.id} comment={reply} handleReplyModeChange={handleReplyModeChange} />
-                    ))}
-                </ul>
+                <tr>
+                    <td colSpan="4">
+                        {replies.map((reply) => (
+                            <Comment key={reply.id} comment={reply} handleReplyModeChange={handleReplyModeChange} />
+                        ))}
+                    </td>
+                </tr>
             )}
-        </li>
+            </tfoot>
+        </table>
     );
 }
 
@@ -317,7 +333,7 @@ function CommentApp() {
             {
                 isFormMessageDisplay ?
                     <div className="comment-form">
-                        <div>
+                        <div className="hide-form">
                             <button onClick={handleShowForm}>Hide Form</button>
                         </div>
                         <button onClick={showNotificationSidebar}>Show notification</button>

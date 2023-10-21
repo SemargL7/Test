@@ -79,10 +79,9 @@ class Captcha extends Component {
 
                 <div>
                     <button onClick={() => this.validateCaptcha()}>Verify</button>
-                    {isValid ? <p>CAPTCHA is valid!</p> : null}
                     <button onClick={() => this.resetCaptcha()}>Reset</button>
                 </div>
-
+                {isValid ? <p>CAPTCHA is valid!</p> : null}
             </div>
         );
     }

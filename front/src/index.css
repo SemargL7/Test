@@ -1,23 +1,19 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #F0F3F3;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #F0F3F3;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
 }
 
-
-
-body {
-  min-height: 100vh;
+input{
+    outline: none;
 }
 
 button {
@@ -31,50 +27,55 @@ button:hover {
     background-color: #4b5563;
 }
 
+
 .main{
     margin: auto;
 }
 
-.message-container{
+.message-container {
     width: 100%;
 }
 
-.comments-container{
-
+.comments-container {
     max-width: 700px;
     margin: auto;
-
 }
 
-.comments-container ul{
+.comments-container ul {
     list-style-type: none;
 }
-.message-header{
+
+.message-header {
     background-color: #CDDDDE;
     display: flex;
     padding: 10px;
-
 }
-.message-header div{
+
+.message-header div {
     margin-right: 10px;
 }
-.message-text{
+
+.message-text {
     text-align: left;
     padding: 10px;
-
 }
-.message{
-    background-color: #ffffff;
+.message tbody{
     width: 100%;
+    display: table-row;
+}
+
+.message {
+    background-color: #ffffff;
     margin: 10px;
     color: #000000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.reply-btn{
+.reply-btn {
     margin-left: auto;
     cursor: pointer;
 }
+
 .message-show-reply{
     cursor: pointer;
     font-size: 10px;
@@ -112,6 +113,7 @@ button:hover {
     justify-content: center;
     list-style: none;
     padding: 0;
+    color: white;
 }
 
 .pagination li {
@@ -320,12 +322,11 @@ button:hover {
 
 .reply a {
     margin-left: 10px;
-    color: #007BFF;
+    color: #737477;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.reply a:hover {
-    text-decoration: underline;
-}
 
 .image-upload svg {
     fill: #333;
@@ -349,8 +350,12 @@ button:hover {
 }
 
 .captcha{
+    display: block;
     color: black;
     margin: 5px;
+}
+.captcha-form input{
+    width: 100%;
 }
 .captcha button{
     border-radius: 0;
@@ -405,6 +410,7 @@ button:hover {
 
 @media (max-width: 700px) {
     .comment-form {
+        position: relative;
         width: 100%;
         margin: auto;
         bottom: 0;
@@ -421,7 +427,12 @@ button:hover {
 
 .buttonShowForm{
     position: fixed;
+    bottom: 0;
+    margin: 5px;
 }
 .comments-container ul{
     padding: 0;
+}
+.hide-form{
+    position: absolute;
 }
