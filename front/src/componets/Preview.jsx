@@ -59,7 +59,7 @@ function Preview({ isPreview, setIsPreview, file }) {
                             file.file_type.includes("gif") ? (
                                 <img src={`${import.meta.env.VITE_API_BASE_URL}/download/${file.path}`} alt="Image" />
                             ) : (
-                                file.file_type.includes("text") ? (
+                                file.file_type.includes("txt") ? (
                                     <div>
                                         <iframe
                                             src={`${import.meta.env.VITE_API_BASE_URL}/download/${file.path}`}

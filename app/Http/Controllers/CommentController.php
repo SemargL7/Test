@@ -90,7 +90,7 @@ class CommentController extends Controller
                 $fileName = $file->getClientOriginalName();
                 $fileType = $file->getClientOriginalExtension();
 
-                if ($fileType === 'txt' && $file->getSize() > 10000) {
+                if ($fileType === 'txt' && $file->getSize() > 100000) {
                     return response()->json(['errors' => 'The text file size exceeds the limit.'], 422);
                 }
 
